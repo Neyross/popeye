@@ -2,7 +2,7 @@ version: '3'
 
 services:
   poll:
-    build: ./poll/
+    build: ./poll
     ports:
       - 5000:80
     networks:
@@ -11,9 +11,14 @@ services:
       restart_policy:
         condition: on-failure
         max_attempts: 3
+    links:
+      - redis
+      - db
 
   redis:
-    image: redis
+    image: redis:buster
+    expose:
+      - 6379
     ports:
       - 6379:6379
     networks:
@@ -37,11 +42,14 @@ services:
     image: postgres
     environment:
       POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      PGDATA: db-data:/var/lib/postgresql/data
     networks:
       - result-tier
       - back-tier
     volumes:
-      - db-data:/home/thibault/B-DOP-400-LYN-4-1-popeye-thibault.bordenave/schema.sql
+      - db-data:/var/lib/postgresql/data
+      - "./schema.sql:/docker-entrypoint-initdb.d/init.sql"
     deploy:
       restart_policy:
         condition: on-failure
