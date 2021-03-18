@@ -13,6 +13,9 @@ services:
     links:
       - redis
       - db
+    environment:
+      - 0.0.0.0
+
   redis:
     image: redis:buster
     expose:
@@ -29,6 +32,8 @@ services:
       networks:
         - back-tier
       restart: always
+      environment:
+        - 0.0.0.0
 
   db:
     image: postgres
@@ -50,6 +55,9 @@ services:
       networks:
         - result-tier
       restart: always
+      environment:
+        - 0.0.0.0
+
 volumes:
   db-data:
 
