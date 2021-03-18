@@ -32,6 +32,9 @@ services:
       networks:
         - back-tier
       restart: always
+      depends_on:
+        - redis
+        - db
       environment:
         - 0.0.0.0
 
@@ -55,6 +58,8 @@ services:
       networks:
         - result-tier
       restart: always
+      depends_on:
+        - db
       environment:
         - 0.0.0.0
 
